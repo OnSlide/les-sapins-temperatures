@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#173f27" />
+  <meta name="description" content="Suivi PMS / HACCP des températures - Hôtel Restaurant Les Sapins" />
+  <title>Températures Les Sapins</title>
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" href="assets/icon-192.png" />
+  <link rel="apple-touch-icon" href="assets/icon-192.png" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="mobile-v2.css" />
+</head>
+<body>
+  <div id="appShell">
+    <header class="topbar">
+      <div class="brand">
+        <img src="assets/logo-sapins.webp" alt="Hôtel Restaurant Les Sapins" />
+        <div>
+          <strong>Températures</strong>
+          <span>PMS / HACCP</span>
+        </div>
+      </div>
+      <div class="top-actions">
+        <span id="syncBadge" class="badge neutral">Local</span>
+        <button id="installBtn" class="btn ghost small hidden">Installer</button>
+      </div>
+    </header>
+
+    <main>
+      <section class="view active" data-view="dashboard">
+        <div class="hero-row">
+          <div>
+            <p class="eyebrow" id="todayLabel"></p>
+            <h1>Suivi des températures</h1>
+            <p class="muted">Saisie rapide, anomalies tracées et archives mensuelles.</p>
+          </div>
+          <button class="btn primary" id="quickAddEquipment">+ Ajouter un équipement</button>
+        </div>
+
+        <article id="mobileInstallCard" class="mobile-install-card hidden">
+          <div class="mobile-install-icon">📲</div>
+          <div class="mobile-install-copy">
+            <strong>Installer Températures Les Sapins</strong>
+            <span id="mobileInstallHint">Ajoutez l’application à votre écran d’accueil pour l’utiliser comme une vraie app.</span>
+          </div>
+          <button class="btn primary small" id="mobileInstallAction">Installer</button>
+        </article>
+
+        <div class="stats-grid" id="statsGrid"></div>
+
+        <section class="today-mobile-section">
+          <div class="section-head compact-head">
+            <div>
+              <p class="eyebrow">Contrôles du jour</p>
+              <h2>À faire aujourd’hui</h2>
+            </div>
+            <span id="todayProgressBadge" class="badge neutral">0/0</span>
+          </div>
+          <div class="today-progress-track"><span id="todayProgressBar"></span></div>
+          <div id="todayQueue" class="today-queue"></div>
+        </section>
+
+        <div class="section-head">
+          <div>
+            <h2>Équipements</h2>
+            <p class="muted">Touchez un équipement pour enregistrer un relevé.</p>
+          </div>
+          <button class="btn ghost" data-go="equipment">Gérer</button>
+        </div>
+        <div id="equipmentDashboard" class="equipment-grid"></div>
+      </section>
+
+      <section class="view" data-view="equipment">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Administration</p>
+            <h1>Frigos & congélateurs</h1>
+          </div>
+          <button class="btn primary" id="addEquipmentBtn">+ Ajouter</button>
+        </div>
+        <div id="equipmentAdmin" class="list-stack"></div>
+      </section>
+
+      <section class="view" data-view="history">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Analyse</p>
+            <h1>Historique</h1>
+          </div>
+        </div>
+        <div class="filters-card">
+          <label>Équipement<select id="historyEquipment"></select></label>
+          <label>Mois<input type="month" id="historyMonth" /></label>
+        </div>
+        <div class="chart-card">
+          <div class="chart-head"><h2 id="chartTitle">Évolution des températures</h2><span id="chartRange" class="badge neutral"></span></div>
+          <canvas id="tempChart" width="1000" height="360"></canvas>
+        </div>
+        <div id="historyList" class="list-stack"></div>
+      </section>
+
+      <section class="view" data-view="archives">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Documents</p>
+            <h1>Archives & PDF</h1>
+            <p class="muted">Générez les relevés mensuels à conserver dans votre PMS.</p>
+          </div>
+        </div>
+        <div class="filters-card archives-filters">
+          <label>Mois<input type="month" id="archiveMonth" /></label>
+          <label>Équipement<select id="archiveEquipment"><option value="all">Tous les équipements</option></select></label>
+          <button class="btn primary" id="exportPdfBtn">Générer le PDF</button>
+        </div>
+        <div id="archiveSummary" class="report-preview"></div>
+      </section>
+
+      <section class="view" data-view="settings">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Configuration</p>
+            <h1>Réglages</h1>
+          </div>
+        </div>
+
+        <div class="settings-grid">
+          <article class="panel">
+            <h2>Établissement</h2>
+            <label>Nom<input id="settingName" value="Hôtel Restaurant Les Sapins" /></label>
+            <label>Société<input id="settingCompany" value="SARL La Renardière" /></label>
+            <label>Adresse<input id="settingAddress" value="131 Route La Vieille Route – 74490 Saint-Jeoire" /></label>
+            <label>Téléphone<input id="settingPhone" value="04 50 35 80 38" /></label>
+            <label>Mes initiales / nom court<input id="settingInitials" maxlength="20" placeholder="Ex. ND" /></label>
+            <p class="tiny">Prérempli automatiquement lors d’un relevé sur cet appareil.</p>
+            <button class="btn primary" id="saveSettingsBtn">Enregistrer</button>
+          </article>
+
+          <article class="panel">
+            <h2>Synchronisation cloud</h2>
+            <p class="muted">Optionnelle. Permet de retrouver les mêmes données sur téléphone, tablette et PC via Supabase.</p>
+            <label>URL Supabase<input id="supabaseUrl" placeholder="https://…supabase.co" /></label>
+            <label>Clé publique anon<input id="supabaseKey" placeholder="eyJ…" /></label>
+            <label>Email<input type="email" id="supabaseEmail" placeholder="votre@email.fr" /></label>
+            <label>Mot de passe<input type="password" id="supabasePassword" /></label>
+            <div class="button-row">
+              <button class="btn primary" id="cloudConnectBtn">Se connecter</button>
+              <button class="btn ghost" id="syncNowBtn">Synchroniser</button>
+              <button class="btn danger ghost" id="cloudDisconnectBtn">Déconnexion</button>
+            </div>
+            <p class="tiny" id="cloudStatus">Mode local actif.</p>
+          </article>
+
+          <article class="panel">
+            <h2>Sauvegarde</h2>
+            <p class="muted">Téléchargez une copie complète de vos données ou restaurez-la sur un autre appareil.</p>
+            <div class="button-row">
+              <button class="btn ghost" id="backupBtn">Exporter la sauvegarde</button>
+              <label class="btn ghost file-btn">Importer<input type="file" id="restoreInput" accept="application/json" hidden /></label>
+            </div>
+          </article>
+
+          <article class="panel mobile-app-panel">
+            <h2>Application mobile</h2>
+            <p class="muted">Une fois publiée en HTTPS, cette V2 peut être installée sur l’écran d’accueil du téléphone et fonctionner en mode autonome.</p>
+            <div class="mobile-capability-list">
+              <span>✓ Saisie tactile</span>
+              <span>✓ Appareil photo</span>
+              <span>✓ QR code par équipement</span>
+              <span>✓ Interface disponible hors ligne après installation</span>
+            </div>
+            <button class="btn ghost" id="settingsInstallBtn">Installer sur cet appareil</button>
+            <p class="tiny" id="pwaStatusText"></p>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <nav class="bottom-nav" aria-label="Navigation principale">
+      <button class="active" data-go="dashboard"><span>⌂</span>Accueil</button>
+      <button data-go="equipment"><span>▣</span>Équipements</button>
+      <button data-go="history"><span>⌁</span>Historique</button>
+      <button data-go="archives"><span>▤</span>PDF</button>
+      <button data-go="settings"><span>⚙</span>Réglages</button>
+    </nav>
+  </div>
+
+  <dialog id="equipmentDialog" class="modal">
+    <form id="equipmentForm" method="dialog">
+      <div class="modal-head"><h2 id="equipmentDialogTitle">Ajouter un équipement</h2><button type="button" class="icon-btn" data-close="equipmentDialog">×</button></div>
+      <input type="hidden" id="equipmentId" />
+      <label>Photo de l'équipement
+        <input type="file" id="equipmentPhoto" accept="image/*" capture="environment" />
+      </label>
+      <div id="equipmentPhotoPreview" class="photo-preview"></div>
+      <label>Nom *<input id="equipmentName" required placeholder="Ex. Chambre froide cuisine" /></label>
+      <div class="two-cols">
+        <label>Type<select id="equipmentType"><option>Frigo</option><option>Chambre froide</option><option>Congélateur</option></select></label>
+        <label>Emplacement<input id="equipmentLocation" placeholder="Cuisine, réserve…" /></label>
+      </div>
+      <div class="two-cols">
+        <label>Seuil minimum (°C)<input type="number" step="0.1" id="equipmentMin" placeholder="Ex. -22" /></label>
+        <label>Seuil maximum (°C)<input type="number" step="0.1" id="equipmentMax" placeholder="Ex. 4" /></label>
+      </div>
+      <label>Denrées / usage<textarea id="equipmentProducts" rows="2" placeholder="Viandes, produits laitiers, desserts…"></textarea></label>
+      <label class="switch-row"><input type="checkbox" id="equipmentActive" checked /> Équipement actif</label>
+      <div class="modal-actions"><button type="button" class="btn ghost" data-close="equipmentDialog">Annuler</button><button type="submit" class="btn primary">Enregistrer</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="logDialog" class="modal">
+    <form id="logForm" method="dialog">
+      <div class="modal-head"><div><p class="eyebrow">Nouveau relevé</p><h2 id="logEquipmentTitle"></h2></div><button type="button" class="icon-btn" data-close="logDialog">×</button></div>
+      <input type="hidden" id="logEquipmentId" />
+      <div id="logEquipmentSnapshot" class="snapshot"></div>
+      <div class="two-cols">
+        <label>Date<input type="date" id="logDate" required /></label>
+        <label>Période<select id="logPeriod"><option value="matin">Matin</option><option value="soir">Soir</option><option value="controle">Contrôle complémentaire</option></select></label>
+      </div>
+      <div class="temperature-entry"><label>Température relevée (°C)<input type="number" inputmode="decimal" step="0.1" id="logTemperature" required placeholder="2,4" autocomplete="off" aria-label="Température relevée" /></label><div id="complianceLive" class="compliance neutral">Saisissez la température</div></div>
+      <label>Initiales / personne ayant contrôlé<input id="logInitials" placeholder="Ex. ND" /></label>
+      <div id="anomalyFields" class="anomaly-fields hidden">
+        <div class="alert danger"><strong>Température non conforme.</strong> Une action corrective doit être tracée avant l'enregistrement.</div>
+        <label>Observation / anomalie<textarea id="logAnomaly" rows="2" placeholder="Ex. porte mal fermée, température anormale…"></textarea></label>
+        <label>Action corrective *
+          <select id="logCorrectivePreset">
+            <option value="">Choisir…</option>
+            <option>Porte refermée / vérifiée</option>
+            <option>Thermostat réglé</option>
+            <option>Second contrôle effectué</option>
+            <option>Denrées déplacées vers une enceinte conforme</option>
+            <option>Maintenance appelée</option>
+            <option>Produits isolés / écartés</option>
+            <option>Produits détruits</option>
+            <option>Autre</option>
+          </select>
+        </label>
+        <label>Précisions<textarea id="logCorrectiveDetails" rows="2"></textarea></label>
+        <label>Photo justificative (facultatif)<input type="file" id="logPhoto" accept="image/*" capture="environment" /></label>
+      </div>
+      <div class="modal-actions"><button type="button" class="btn ghost" data-close="logDialog">Annuler</button><button type="submit" class="btn primary">Enregistrer le relevé</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="qrDialog" class="modal small-modal">
+    <div class="modal-head"><h2>QR code équipement</h2><button type="button" class="icon-btn" data-close="qrDialog">×</button></div>
+    <div id="qrCodeBox" class="qr-box"></div>
+    <p class="muted center" id="qrLabel"></p>
+    <button class="btn ghost full" id="printQrBtn">Imprimer le QR code</button>
+  </dialog>
+
+  <div id="toast" class="toast"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.4/dist/jspdf.plugin.autotable.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+  <script src="app.js"></script>
+  <script src="mobile-v2.js"></script>
+</body>
+</html>
