@@ -191,8 +191,8 @@
     <form id="equipmentForm" method="dialog">
       <div class="modal-head"><h2 id="equipmentDialogTitle">Ajouter un équipement</h2><button type="button" class="icon-btn" data-close="equipmentDialog">×</button></div>
       <input type="hidden" id="equipmentId" />
-      <label>Photo de l'équipement
-        <input type="file" id="equipmentPhoto" accept="image/*" capture="environment" />
+      <label>Photo de l'équipement — prendre ou choisir une photo
+        <input type="file" id="equipmentPhoto" accept="image/*" />
       </label>
       <div id="equipmentPhotoPreview" class="photo-preview"></div>
       <label>Nom *<input id="equipmentName" required placeholder="Ex. Chambre froide cuisine" /></label>
@@ -238,7 +238,7 @@
           </select>
         </label>
         <label>Précisions<textarea id="logCorrectiveDetails" rows="2"></textarea></label>
-        <label>Photo justificative (facultatif)<input type="file" id="logPhoto" accept="image/*" capture="environment" /></label>
+        <label>Photo justificative (facultatif) — prendre ou choisir une photo<input type="file" id="logPhoto" accept="image/*" /></label>
       </div>
       <div class="modal-actions"><button type="button" class="btn ghost" data-close="logDialog">Annuler</button><button type="submit" class="btn primary">Enregistrer le relevé</button></div>
     </form>

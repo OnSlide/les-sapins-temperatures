@@ -1,4 +1,4 @@
-const CACHE='les-sapins-temp-v2-1-2-20260814';
+const CACHE='les-sapins-temp-v2-2-20260814';
 const CORE=['./index.html','./styles.css','./mobile-v2.css','./app.js','./mobile-v2.js','./manifest.webmanifest','./assets/logo-sapins.webp','./assets/logo-sapins.png','./assets/logo-sapins-pdf.png','./assets/icon-192.png','./assets/icon-512.png'];
 
 self.addEventListener('install', event => {
