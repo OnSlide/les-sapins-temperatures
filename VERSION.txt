@@ -1,1 +1,1 @@
-V2.1.1 Logo fix
+V2.1.2 - logo intégré dans index.html
