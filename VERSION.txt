@@ -1,2 +1,1 @@
-V2.1 HOTFIX – 2026-08-14
-Chargement applicatif prioritaire; modules externes chargés à la demande.
+V2.1.1 Logo fix
