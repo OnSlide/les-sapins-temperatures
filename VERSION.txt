@@ -1,2 +1,2 @@
-Températures Les Sapins — V2 Mobile
-Build 2026-08-14
+V2.1 HOTFIX – 2026-08-14
+Chargement applicatif prioritaire; modules externes chargés à la demande.

@@ -1,9 +1,5 @@
-# Températures Les Sapins
+# Températures Les Sapins — V2.1 Hotfix
 
-Application PWA de suivi PMS / HACCP des températures des équipements frigorifiques de l’Hôtel Restaurant Les Sapins.
+Correctif GitHub Pages : l’interface se charge sans attendre les bibliothèques externes. PDF, QR code et Supabase sont chargés à la demande.
 
-## Publication GitHub Pages
-
-Publier la branche `main` depuis la racine `/` dans **Settings → Pages**.
-
-Version : V2 Mobile
+Publier tous les fichiers à la racine de la branche `main`.
