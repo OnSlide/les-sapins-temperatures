@@ -1,1 +1,1 @@
-V2.2 — Photothèque iPhone
+V3.0 synchronisée — Supabase / multi-appareils / rôles / hors ligne

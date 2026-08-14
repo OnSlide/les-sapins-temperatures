@@ -14,6 +14,31 @@
 </head>
 <body>
   <div id="bootNotice" style="position:fixed;inset:0;z-index:9999;background:#f4f7f4;display:flex;align-items:center;justify-content:center;font-family:system-ui;color:#173f27"><div style="text-align:center"><strong style="font-size:22px">Températures Les Sapins</strong><br><span style="font-size:14px">Chargement de l’application…</span></div></div>
+
+  <div id="authGate" class="auth-gate hidden" aria-live="polite">
+    <section class="auth-card">
+      <div class="auth-mark">🌲</div>
+      <p class="eyebrow">Hôtel Restaurant Les Sapins</p>
+      <h1>Suivi des températures</h1>
+      <p class="muted">Connectez-vous pour retrouver les mêmes relevés sur tous les appareils.</p>
+      <div id="authForms" class="auth-forms">
+        <div class="two-cols auth-signup-fields">
+          <label>Nom / prénom<input id="authFullName" autocomplete="name" placeholder="Ex. Nicolas" /></label>
+          <label>Initiales<input id="authInitials" maxlength="10" autocapitalize="characters" placeholder="Ex. ND" /></label>
+        </div>
+        <label>Email<input type="email" id="authEmail" autocomplete="email" placeholder="vous@exemple.fr" /></label>
+        <label>Mot de passe<input type="password" id="authPassword" autocomplete="current-password" placeholder="8 caractères minimum" /></label>
+        <div class="auth-actions"><button class="btn primary" id="authLoginBtn">Se connecter</button><button class="btn ghost" id="authSignupBtn">Créer mon compte</button></div>
+        <p class="tiny">Pour une première inscription, renseignez aussi votre nom et vos initiales. Le premier compte validé devient administrateur.</p>
+      </div>
+      <div id="authPending" class="hidden pending-box">
+        <strong>Compte en attente d’approbation</strong>
+        <p class="muted">Un administrateur doit activer ce compte avant l’accès aux relevés.</p>
+        <div class="auth-actions"><button class="btn primary" id="authRefreshBtn">Vérifier l’activation</button><button class="btn ghost" id="authSignOutBtn">Changer de compte</button></div>
+      </div>
+      <p id="authStatus" class="auth-status"></p>
+    </section>
+  </div>
   <div id="appShell">
     <header class="topbar">
       <div class="brand">
@@ -139,18 +164,21 @@
           </article>
 
           <article class="panel">
-            <h2>Synchronisation cloud</h2>
-            <p class="muted">Optionnelle. Permet de retrouver les mêmes données sur téléphone, tablette et PC via Supabase.</p>
-            <label>URL Supabase<input id="supabaseUrl" placeholder="https://…supabase.co" /></label>
-            <label>Clé publique anon<input id="supabaseKey" placeholder="eyJ…" /></label>
-            <label>Email<input type="email" id="supabaseEmail" placeholder="votre@email.fr" /></label>
-            <label>Mot de passe<input type="password" id="supabasePassword" /></label>
-            <div class="button-row">
-              <button class="btn primary" id="cloudConnectBtn">Se connecter</button>
-              <button class="btn ghost" id="syncNowBtn">Synchroniser</button>
-              <button class="btn danger ghost" id="cloudDisconnectBtn">Déconnexion</button>
+            <h2>Compte & synchronisation</h2>
+            <div id="accountIdentity" class="account-identity">Non connecté</div>
+            <p class="muted">Les relevés sont enregistrés dans la base Les Sapins et partagés automatiquement entre les appareils. En cas de coupure, les saisies restent sur l’appareil puis sont envoyées au retour du réseau.</p>
+            <div class="button-row sync-buttons">
+              <button class="btn primary" id="syncNowBtn">Synchroniser maintenant</button>
+              <button class="btn ghost" id="importLocalBtn">Importer les données de cet appareil</button>
+              <button class="btn danger ghost" id="cloudDisconnectBtn">Se déconnecter</button>
             </div>
-            <p class="tiny" id="cloudStatus">Mode local actif.</p>
+            <p class="tiny" id="cloudStatus">Initialisation de la synchronisation…</p>
+          </article>
+
+          <article class="panel hidden" id="userAdminPanel">
+            <h2>Utilisateurs</h2>
+            <p class="muted">Approuvez les nouveaux comptes et choisissez leur niveau d’accès.</p>
+            <div id="userList" class="user-list"><p class="tiny">Chargement…</p></div>
           </article>
 
           <article class="panel">
@@ -164,12 +192,12 @@
 
           <article class="panel mobile-app-panel">
             <h2>Application mobile</h2>
-            <p class="muted">Une fois publiée en HTTPS, cette V2 peut être installée sur l’écran d’accueil du téléphone et fonctionner en mode autonome.</p>
+            <p class="muted">Une fois publiée en HTTPS, cette V3 peut être installée sur l’écran d’accueil du téléphone et fonctionner en mode autonome.</p>
             <div class="mobile-capability-list">
               <span>✓ Saisie tactile</span>
               <span>✓ Appareil photo</span>
               <span>✓ QR code par équipement</span>
-              <span>✓ Interface disponible hors ligne après installation</span>
+              <span>✓ Saisie hors ligne + synchronisation au retour du réseau</span>
             </div>
             <button class="btn ghost" id="settingsInstallBtn">Installer sur cet appareil</button>
             <p class="tiny" id="pwaStatusText"></p>
